@@ -32,8 +32,8 @@ If you need persistent storage, consider using Railway's volume mounts or extern
 
    ```bash
    # Change these default values to your desired credentials
-   : ${SSH_USERNAME:="yourusername"}
-   : ${SSH_PASSWORD:="yoursecurepassword"}
+   : ${SSH_USERNAME:="myuser"}
+   : ${SSH_PASSWORD:="mypassword"}
    ```
 
 2. Commit and push your changes to your repository
