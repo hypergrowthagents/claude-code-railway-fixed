@@ -10,6 +10,10 @@ A Docker image designed for Railway deployment that provides an Ubuntu 22.04 bas
 - Root login disabled by default for security
 - Created user has sudo permissions
 - Network utilities included (ping, telnet, iproute2)
+- **Development Environment**: Claude Code, Node.js 18+, Ruby 3.2, Rails
+- **CLI Tools**: GitHub CLI, Railway CLI, PostgreSQL client, Redis tools
+- **Package Managers**: npm, pnpm, yarn, bundler
+- **Automated setup**: Git configuration, CLI authentication, repository cloning
 
 ## ⚠️ Important Notice
 
@@ -49,10 +53,18 @@ If you need persistent storage, consider using Railway's volume mounts or extern
    ![Environment Variables](assets/env-variables.png)
 
 4. Add the following environment variables:
+
+   **SSH Configuration:**
    - `SSH_USERNAME` - Your desired username
    - `SSH_PASSWORD` - Your desired password
    - `ROOT_PASSWORD` - Root password (optional, leave empty if root login is disabled)
    - `AUTHORIZED_KEYS` - SSH public keys for key-based authentication (optional)
+
+   **Development Environment (Optional):**
+   - `GH_TOKEN` - GitHub Personal Access Token for GitHub CLI authentication
+   - `GITHUB_EMAIL` - Your git commit email address
+   - `GITHUB_NAME` - Your git commit name
+   - `RAILWAY_TOKEN` - Railway API token for Railway CLI authentication
 
 5. Redeploy your project to apply the new environment variables:
 
@@ -96,6 +108,53 @@ After configuring the TCP proxy, redeploy your project to apply the networking c
 3. When prompted about the host authenticity, type `yes` to accept the new key pair
 4. Enter the user password when prompted
 5. You're now connected to your Railway container via SSH!
+
+## Development Environment
+
+This container comes pre-configured with a complete development environment including:
+
+### Installed Tools
+- **Claude Code**: AI-powered development assistant
+- **Node.js 18+**: JavaScript runtime with npm, pnpm, and yarn
+- **Ruby 3.2.0**: With Rails and bundler pre-installed
+- **GitHub CLI**: Authenticated and ready to use (if `GH_TOKEN` provided)
+- **Railway CLI**: Authenticated and ready to use (if `RAILWAY_TOKEN` provided)
+- **Database Clients**: PostgreSQL and Redis clients
+- **Build Tools**: ripgrep, build-essential, git, curl, wget
+
+### Automatic Setup
+When the container starts, it automatically:
+1. Configures git with your identity (if `GITHUB_EMAIL` and `GITHUB_NAME` provided)
+2. Authenticates GitHub CLI (if `GH_TOKEN` provided)
+3. Authenticates Railway CLI (if `RAILWAY_TOKEN` provided)  
+4. Installs Claude Code globally for the SSH user
+5. Creates a `~/dev/` directory for your projects
+
+### Usage
+After SSH connection:
+```bash
+# Claude Code is ready to use
+claude-code
+
+# GitHub CLI is authenticated
+gh repo list
+
+# Railway CLI is authenticated  
+railway projects
+
+# Clone your repos to ~/dev/
+cd ~/dev
+gh repo clone owner/repo
+
+# Ruby and Rails are ready
+ruby --version
+rails --version
+
+# Node.js tools are ready
+node --version
+npm --version
+pnpm --version
+```
 
 ## Configuration Details
 

@@ -4,9 +4,13 @@ FROM ubuntu:22.04
 # Remove the default ubuntu user to free up UID/GID 1000
 RUN userdel -r ubuntu 2>/dev/null || true
 
-# Install dependencies with disable root login for security reasons
+# Install system dependencies and SSH server
 RUN apt-get update \
-    && apt-get install -y iproute2 iputils-ping openssh-server telnet sudo \
+    && apt-get install -y \
+        iproute2 iputils-ping openssh-server telnet sudo \
+        curl wget git unzip build-essential \
+        postgresql-client redis-tools \
+        ca-certificates gnupg lsb-release \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && mkdir -p /run/sshd \
@@ -15,9 +19,40 @@ RUN apt-get update \
     # Disable root login
     && echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 
+# Install Node.js 18.x
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+# Install ripgrep (required for Claude Code)
+RUN curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb \
+    && dpkg -i ripgrep_14.1.0-1_amd64.deb \
+    && rm ripgrep_14.1.0-1_amd64.deb
+
+# Install Ruby via rbenv for better version management
+RUN git clone https://github.com/rbenv/rbenv.git /opt/rbenv \
+    && git clone https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build \
+    && echo 'export PATH="/opt/rbenv/bin:$PATH"' >> /etc/profile \
+    && echo 'eval "$(rbenv init -)"' >> /etc/profile \
+    && /opt/rbenv/bin/rbenv install 3.2.0 \
+    && /opt/rbenv/bin/rbenv global 3.2.0
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Railway CLI
+RUN npm install -g @railway/cli
+
 # Copy ssh user config to configure user's password and authorized keys
 COPY ssh-user-config.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/ssh-user-config.sh
+COPY setup-dev-tools.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/ssh-user-config.sh \
+    && chmod +x /usr/local/bin/setup-dev-tools.sh
 
 # Expose port 22
 EXPOSE 22

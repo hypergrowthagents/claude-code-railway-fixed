@@ -47,6 +47,20 @@ else
     echo "Authorized keys not set"
 fi
 
+# Set up development tools and configure environment
+echo "Setting up development environment..."
+if [ -f "/usr/local/bin/setup-dev-tools.sh" ]; then
+    bash /usr/local/bin/setup-dev-tools.sh
+else
+    echo "Warning: setup-dev-tools.sh not found"
+fi
+
+# Create development directory
+echo "Setting up development workspace..."
+sudo -u "$USERNAME" mkdir -p "/home/$USERNAME/dev"
+
+echo "Development environment setup completed"
+
 # Start the SSH server
 echo "Starting SSH server..."
 exec /usr/sbin/sshd -D
