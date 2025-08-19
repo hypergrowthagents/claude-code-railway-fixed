@@ -6,7 +6,7 @@ A Docker image designed for Railway deployment that provides an Ubuntu 22.04 bas
 
 - Ubuntu 22.04 base image
 - SSH server (OpenSSH) pre-configured
-- **Custom Welcome Message**: Railway-branded MOTD with development environment status
+- **Clean SSH Login**: No welcome messages for direct command line access
 - Password authentication enabled
 - Root login disabled by default for security
 - Created user has sudo permissions
@@ -65,7 +65,7 @@ If you need persistent storage, consider using Railway's volume mounts or extern
    - `GH_TOKEN` - GitHub Personal Access Token for GitHub CLI authentication
    - `GITHUB_EMAIL` - Your git commit email address
    - `GITHUB_NAME` - Your git commit name
-   - `RAILWAY_TOKEN` - Railway API token for Railway CLI authentication
+   - `RAILWAY_TOKEN` - Railway API token (optional, for CI/CD use)
 
 5. Redeploy your project to apply the new environment variables:
 
@@ -119,7 +119,7 @@ This container comes pre-configured with a complete development environment incl
 - **Node.js 18+**: JavaScript runtime with npm, pnpm, and yarn
 - **Ruby**: System Ruby with Rails and bundler pre-installed
 - **GitHub CLI**: Authenticated and ready to use (if `GH_TOKEN` provided)
-- **Railway CLI**: Authenticated and ready to use (if `RAILWAY_TOKEN` provided)
+- **Railway CLI**: Available (requires `railway login --browserless` in SSH session)
 - **Database Clients**: PostgreSQL and Redis clients
 - **Build Tools**: ripgrep, build-essential, git, curl, wget
 
@@ -127,29 +127,25 @@ This container comes pre-configured with a complete development environment incl
 When the container starts, it automatically:
 1. Configures git with your identity (if `GITHUB_EMAIL` and `GITHUB_NAME` provided)
 2. Authenticates GitHub CLI (if `GH_TOKEN` provided)
-3. Sets up Railway CLI environment (if `RAILWAY_TOKEN` provided)  
+3. Installs Railway CLI (login required: `railway login --browserless`)  
 4. Installs Claude Code globally for the SSH user
 5. Creates a `~/dev/` directory for your projects
 
-### Welcome Message
-When you SSH into the container, you'll see a custom Railway-branded welcome message that displays:
-- System information (Ubuntu version, hostname, uptime)
-- Development tool versions (Node.js, Ruby, Claude Code)
-- CLI authentication status (GitHub CLI, Railway CLI)
-- Quick start commands and workspace location
-- Important reminder about ephemeral storage
+### Clean Login
+SSH login goes directly to command prompt with no welcome messages for a clean development experience.
 
 ### Usage
 After SSH connection:
 ```bash
 # Claude Code is ready to use
-claude-code
+claude
 
 # GitHub CLI is authenticated
 gh repo list
 
-# Railway CLI uses environment variable automatically
-railway projects
+# Railway CLI (requires manual login in SSH session)
+railway login --browserless
+railway list
 
 # Clone your repos to ~/dev/
 cd ~/dev

@@ -27,7 +27,7 @@ echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.profile"
 # Ruby is already installed system-wide, no rbenv setup needed
 export PATH="$USER_HOME/.npm-global/bin:$PATH"
 
-# Install Claude Code globally as user
+# Install Claude Code globally as user (command: claude)
 echo "Installing Claude Code..."
 run_as_user "npm install -g @anthropic-ai/claude-code"
 
@@ -47,9 +47,10 @@ if [ -n "$GH_TOKEN" ]; then
     run_as_user "gh auth status"
 fi
 
-# Set Railway token for CLI if provided
+# Set Railway token for CLI if provided (optional, mainly for CI/CD)
+# Note: For SSH sessions, use 'railway login --browserless'
 if [ -n "$RAILWAY_TOKEN" ]; then
-    echo "Setting up Railway CLI..."
+    echo "Setting up Railway CLI token..."
     echo "export RAILWAY_TOKEN='$RAILWAY_TOKEN'" >> "$USER_HOME/.bashrc"
     echo "export RAILWAY_TOKEN='$RAILWAY_TOKEN'" >> "$USER_HOME/.profile"
 fi

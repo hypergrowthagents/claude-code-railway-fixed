@@ -30,7 +30,7 @@ This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04
 3. Sets up authorized keys if provided (disables password auth automatically)
 4. Calls `setup-dev-tools.sh` to configure development environment
 5. Installs Claude Code globally for SSH user
-6. Configures git identity and sets up CLI tools (GitHub CLI auth, Railway CLI env vars)
+6. Configures git identity and sets up CLI tools (GitHub CLI auth, installs Railway CLI)
 7. Creates ~/dev workspace directory
 8. Starts SSH daemon
 
@@ -48,7 +48,7 @@ Development Environment (Optional):
 - `GH_TOKEN`: GitHub Personal Access Token for GitHub CLI authentication
 - `GITHUB_EMAIL`: Git commit email address
 - `GITHUB_NAME`: Git commit name
-- `RAILWAY_TOKEN`: Railway API token for Railway CLI authentication
+- `RAILWAY_TOKEN`: Railway API token (optional, for CI/CD use)
 
 ## Deployment Commands
 
@@ -78,7 +78,7 @@ docker run -p 2222:22 \
 ssh testuser@localhost -p 2222
 
 # Test development tools after SSH connection
-claude-code --version
+claude --version
 node --version
 ruby --version
 gh auth status
