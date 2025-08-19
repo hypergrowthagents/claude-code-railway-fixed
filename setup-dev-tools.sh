@@ -29,7 +29,7 @@ export PATH="$USER_HOME/.npm-global/bin:$PATH"
 
 # Install Claude Code globally as user
 echo "Installing Claude Code..."
-run_as_user "npm install -g @anthropic/claude-code"
+run_as_user "npm install -g @anthropic-ai/claude-code"
 
 # Configure git if environment variables are provided
 if [ -n "$GITHUB_EMAIL" ] && [ -n "$GITHUB_NAME" ]; then

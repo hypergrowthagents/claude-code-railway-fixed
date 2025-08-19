@@ -57,7 +57,7 @@ fi
 
 # Create development directory
 echo "Setting up development workspace..."
-sudo -u "$USERNAME" mkdir -p "/home/$USERNAME/dev"
+sudo -u "$USERNAME" -- mkdir -p "/home/$USERNAME/dev"
 
 echo "Development environment setup completed"
 
