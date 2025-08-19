@@ -126,7 +126,7 @@ This container comes pre-configured with a complete development environment incl
 When the container starts, it automatically:
 1. Configures git with your identity (if `GITHUB_EMAIL` and `GITHUB_NAME` provided)
 2. Authenticates GitHub CLI (if `GH_TOKEN` provided)
-3. Authenticates Railway CLI (if `RAILWAY_TOKEN` provided)  
+3. Sets up Railway CLI environment (if `RAILWAY_TOKEN` provided)  
 4. Installs Claude Code globally for the SSH user
 5. Creates a `~/dev/` directory for your projects
 
@@ -139,7 +139,7 @@ claude-code
 # GitHub CLI is authenticated
 gh repo list
 
-# Railway CLI is authenticated  
+# Railway CLI uses environment variable automatically
 railway projects
 
 # Clone your repos to ~/dev/

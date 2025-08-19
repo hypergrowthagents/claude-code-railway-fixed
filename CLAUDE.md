@@ -30,7 +30,7 @@ This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04
 3. Sets up authorized keys if provided (disables password auth automatically)
 4. Calls `setup-dev-tools.sh` to configure development environment
 5. Installs Claude Code globally for SSH user
-6. Configures git identity and authenticates CLI tools
+6. Configures git identity and sets up CLI tools (GitHub CLI auth, Railway CLI env vars)
 7. Creates ~/dev workspace directory
 8. Starts SSH daemon
 
@@ -106,3 +106,28 @@ gh auth status
 - Remember Railway containers are stateless - no persistent storage without volumes
 - Use `~/dev/` directory for project development
 - Clone repositories manually after SSH connection using `gh repo clone`
+
+## Documentation Maintenance
+
+**IMPORTANT:** When making changes to the codebase, always update documentation:
+
+### Files to Keep Updated:
+- **README.md**: User-facing documentation, environment variables, usage examples
+- **CLAUDE.md**: Development guidance, architecture overview, deployment instructions
+
+### When to Update Documentation:
+- Adding/removing environment variables
+- Changing setup scripts (`ssh-user-config.sh`, `setup-dev-tools.sh`)
+- Modifying Dockerfile (new tools, dependencies)
+- Changing authentication methods (CLI tools, tokens)
+- Adding new features or workflows
+
+### Documentation Update Checklist:
+- [ ] Update environment variables section if changed
+- [ ] Update installation/setup steps if modified
+- [ ] Update usage examples with new commands/features
+- [ ] Update architecture section if new scripts/components added
+- [ ] Verify all example commands still work
+- [ ] Test documentation accuracy against actual deployment
+
+**Always commit documentation updates with code changes to keep them in sync.**
