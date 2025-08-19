@@ -47,10 +47,11 @@ if [ -n "$GH_TOKEN" ]; then
     run_as_user "gh auth status"
 fi
 
-# Authenticate Railway CLI if token is provided
+# Set Railway token for CLI if provided
 if [ -n "$RAILWAY_TOKEN" ]; then
-    echo "Authenticating Railway CLI..."
-    run_as_user "railway login --token '$RAILWAY_TOKEN'"
+    echo "Setting up Railway CLI..."
+    echo "export RAILWAY_TOKEN='$RAILWAY_TOKEN'" >> "$USER_HOME/.bashrc"
+    echo "export RAILWAY_TOKEN='$RAILWAY_TOKEN'" >> "$USER_HOME/.profile"
 fi
 
 # Rails is already installed system-wide during Docker build
