@@ -28,13 +28,12 @@ RUN curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripg
     && dpkg -i ripgrep_14.1.0-1_amd64.deb \
     && rm ripgrep_14.1.0-1_amd64.deb
 
-# Install Ruby via rbenv for better version management
-RUN git clone https://github.com/rbenv/rbenv.git /opt/rbenv \
-    && git clone https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build \
-    && echo 'export PATH="/opt/rbenv/bin:$PATH"' >> /etc/profile \
-    && echo 'eval "$(rbenv init -)"' >> /etc/profile \
-    && /opt/rbenv/bin/rbenv install 3.2.0 \
-    && /opt/rbenv/bin/rbenv global 3.2.0
+# Install Ruby via system package manager (simpler and more reliable)
+RUN apt-get update \
+    && apt-get install -y ruby-full ruby-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && gem install rails bundler
 
 # Install GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \

@@ -24,15 +24,8 @@ run_as_user "npm config set prefix '$USER_HOME/.npm-global'"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.bashrc"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.profile"
 
-# Add rbenv to PATH for this session
-echo 'export PATH="/opt/rbenv/bin:$PATH"' >> "$USER_HOME/.bashrc"
-echo 'eval "$(rbenv init -)"' >> "$USER_HOME/.bashrc"
-echo 'export PATH="/opt/rbenv/bin:$PATH"' >> "$USER_HOME/.profile"
-echo 'eval "$(rbenv init -)"' >> "$USER_HOME/.profile"
-
-# Source the updated profile for current setup
-export PATH="/opt/rbenv/bin:$USER_HOME/.npm-global/bin:$PATH"
-eval "$(rbenv init -)" 2>/dev/null || true
+# Ruby is already installed system-wide, no rbenv setup needed
+export PATH="$USER_HOME/.npm-global/bin:$PATH"
 
 # Install Claude Code globally as user
 echo "Installing Claude Code..."
@@ -60,11 +53,7 @@ if [ -n "$RAILWAY_TOKEN" ]; then
     run_as_user "railway login --token '$RAILWAY_TOKEN'"
 fi
 
-# Install Rails if Ruby is available
-if command -v /opt/rbenv/bin/rbenv >/dev/null 2>&1; then
-    echo "Installing Rails..."
-    run_as_user "source $USER_HOME/.bashrc && gem install rails bundler"
-fi
+# Rails is already installed system-wide during Docker build
 
 # Install common Node.js packages
 echo "Installing common Node.js packages..."
