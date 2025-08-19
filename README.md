@@ -6,6 +6,7 @@ A Docker image designed for Railway deployment that provides an Ubuntu 22.04 bas
 
 - Ubuntu 22.04 base image
 - SSH server (OpenSSH) pre-configured
+- **Custom Welcome Message**: Railway-branded MOTD with development environment status
 - Password authentication enabled
 - Root login disabled by default for security
 - Created user has sudo permissions
@@ -129,6 +130,14 @@ When the container starts, it automatically:
 3. Sets up Railway CLI environment (if `RAILWAY_TOKEN` provided)  
 4. Installs Claude Code globally for the SSH user
 5. Creates a `~/dev/` directory for your projects
+
+### Welcome Message
+When you SSH into the container, you'll see a custom Railway-branded welcome message that displays:
+- System information (Ubuntu version, hostname, uptime)
+- Development tool versions (Node.js, Ruby, Claude Code)
+- CLI authentication status (GitHub CLI, Railway CLI)
+- Quick start commands and workspace location
+- Important reminder about ephemeral storage
 
 ### Usage
 After SSH connection:

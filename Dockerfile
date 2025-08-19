@@ -50,8 +50,15 @@ RUN npm install -g @railway/cli
 # Copy ssh user config to configure user's password and authorized keys
 COPY ssh-user-config.sh /usr/local/bin/
 COPY setup-dev-tools.sh /usr/local/bin/
+COPY custom-motd.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/ssh-user-config.sh \
-    && chmod +x /usr/local/bin/setup-dev-tools.sh
+    && chmod +x /usr/local/bin/setup-dev-tools.sh \
+    && chmod +x /usr/local/bin/custom-motd.sh
+
+# Configure custom MOTD
+RUN rm -f /etc/motd \
+    && rm -f /etc/update-motd.d/* \
+    && ln -s /usr/local/bin/custom-motd.sh /etc/update-motd.d/00-custom
 
 # Expose port 22
 EXPOSE 22
