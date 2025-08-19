@@ -4,18 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04 base with SSH server enabled for Railway deployment. It creates a containerized SSH environment accessible via Railway's TCP proxy.
+This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04 base with SSH server enabled for Railway deployment. It creates a containerized SSH environment accessible via Railway's TCP proxy, pre-configured as a complete development environment with Claude Code, Node.js, Ruby, and essential development tools.
 
 ## Architecture
 
-- **Dockerfile**: Defines Ubuntu 22.04 base image with SSH server, creates secure user setup
+- **Dockerfile**: Defines Ubuntu 22.04 base image with SSH server, Node.js 18+, Ruby, development tools
 - **ssh-user-config.sh**: Configuration script that runs on container startup to set up SSH users and authentication
+- **setup-dev-tools.sh**: Configures Claude Code, git identity, CLI authentication, and development environment
 - **assets/**: Screenshots for documentation showing Railway configuration steps
 
 ## Key Components
 
 ### Container Setup
 - Ubuntu 22.04 base with OpenSSH server
+- Node.js 18+, Ruby, Rails, PostgreSQL/Redis clients
+- Claude Code AI development assistant
+- GitHub CLI and Railway CLI pre-installed
 - Root login disabled by default for security
 - Custom user creation with sudo permissions
 - Support for both password and SSH key authentication
@@ -24,7 +28,11 @@ This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04
 1. `ssh-user-config.sh` reads environment variables or defaults
 2. Creates SSH user with specified credentials
 3. Sets up authorized keys if provided (disables password auth automatically)
-4. Starts SSH daemon
+4. Calls `setup-dev-tools.sh` to configure development environment
+5. Installs Claude Code globally for SSH user
+6. Configures git identity and authenticates CLI tools
+7. Creates ~/dev workspace directory
+8. Starts SSH daemon
 
 ## Environment Variables
 
@@ -35,6 +43,12 @@ Required for deployment:
 Optional:
 - `ROOT_PASSWORD`: Root password (empty by default, root login disabled)
 - `AUTHORIZED_KEYS`: SSH public keys for key-based authentication
+
+Development Environment (Optional):
+- `GH_TOKEN`: GitHub Personal Access Token for GitHub CLI authentication
+- `GITHUB_EMAIL`: Git commit email address
+- `GITHUB_NAME`: Git commit name
+- `RAILWAY_TOKEN`: Railway API token for Railway CLI authentication
 
 ## Deployment Commands
 
@@ -52,10 +66,22 @@ git push
 docker build -t railway-ssh .
 
 # Run locally (expose port 2222 for testing)
-docker run -p 2222:22 -e SSH_USERNAME=testuser -e SSH_PASSWORD=testpass railway-ssh
+docker run -p 2222:22 \
+  -e SSH_USERNAME=testuser \
+  -e SSH_PASSWORD=testpass \
+  -e GITHUB_EMAIL="your@email.com" \
+  -e GITHUB_NAME="Your Name" \
+  -e GH_TOKEN="your_github_token" \
+  railway-ssh
 
 # Connect locally
 ssh testuser@localhost -p 2222
+
+# Test development tools after SSH connection
+claude-code --version
+node --version
+ruby --version
+gh auth status
 ```
 
 ## Railway Configuration
@@ -74,6 +100,9 @@ ssh testuser@localhost -p 2222
 ## Development Guidelines
 
 - Modify `ssh-user-config.sh` for user setup logic changes
+- Update `setup-dev-tools.sh` for development tool configuration changes
 - Update Dockerfile for base image or package changes
 - Test locally before Railway deployment
 - Remember Railway containers are stateless - no persistent storage without volumes
+- Use `~/dev/` directory for project development
+- Clone repositories manually after SSH connection using `gh repo clone`

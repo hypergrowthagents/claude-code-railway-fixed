@@ -116,7 +116,7 @@ This container comes pre-configured with a complete development environment incl
 ### Installed Tools
 - **Claude Code**: AI-powered development assistant
 - **Node.js 18+**: JavaScript runtime with npm, pnpm, and yarn
-- **Ruby 3.2.0**: With Rails and bundler pre-installed
+- **Ruby**: System Ruby with Rails and bundler pre-installed
 - **GitHub CLI**: Authenticated and ready to use (if `GH_TOKEN` provided)
 - **Railway CLI**: Authenticated and ready to use (if `RAILWAY_TOKEN` provided)
 - **Database Clients**: PostgreSQL and Redis clients
