@@ -47,13 +47,8 @@ if [ -n "$GH_TOKEN" ]; then
     run_as_user "gh auth status"
 fi
 
-# Set Railway token for CLI if provided (optional, mainly for CI/CD)
-# Note: For SSH sessions, use 'railway login --browserless'
-if [ -n "$RAILWAY_TOKEN" ]; then
-    echo "Setting up Railway CLI token..."
-    echo "export RAILWAY_TOKEN='$RAILWAY_TOKEN'" >> "$USER_HOME/.bashrc"
-    echo "export RAILWAY_TOKEN='$RAILWAY_TOKEN'" >> "$USER_HOME/.profile"
-fi
+# Railway CLI is installed system-wide
+# Note: Manual login required after SSH connection: 'railway login'
 
 # Rails is already installed system-wide during Docker build
 

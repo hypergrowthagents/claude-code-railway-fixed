@@ -65,7 +65,6 @@ If you need persistent storage, consider using Railway's volume mounts or extern
    - `GH_TOKEN` - GitHub Personal Access Token for GitHub CLI authentication
    - `GITHUB_EMAIL` - Your git commit email address
    - `GITHUB_NAME` - Your git commit name
-   - `RAILWAY_TOKEN` - Railway API token (optional, for CI/CD use)
 
 5. Redeploy your project to apply the new environment variables:
 
@@ -119,7 +118,7 @@ This container comes pre-configured with a complete development environment incl
 - **Node.js 18+**: JavaScript runtime with npm, pnpm, and yarn
 - **Ruby**: System Ruby with Rails and bundler pre-installed
 - **GitHub CLI**: Authenticated and ready to use (if `GH_TOKEN` provided)
-- **Railway CLI**: Available (requires `railway login --browserless` in SSH session)
+- **Railway CLI**: Available (requires manual login: `railway login`)
 - **Database Clients**: PostgreSQL and Redis clients
 - **Build Tools**: ripgrep, build-essential, git, curl, wget
 
@@ -127,7 +126,7 @@ This container comes pre-configured with a complete development environment incl
 When the container starts, it automatically:
 1. Configures git with your identity (if `GITHUB_EMAIL` and `GITHUB_NAME` provided)
 2. Authenticates GitHub CLI (if `GH_TOKEN` provided)
-3. Installs Railway CLI (login required: `railway login --browserless`)  
+3. Installs Railway CLI (manual login required after SSH connection)  
 4. Installs Claude Code globally for the SSH user
 5. Creates a `~/dev/` directory for your projects
 
@@ -144,7 +143,7 @@ claude
 gh repo list
 
 # Railway CLI (requires manual login in SSH session)
-railway login --browserless
+railway login
 railway list
 
 # Clone your repos to ~/dev/
