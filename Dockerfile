@@ -69,8 +69,8 @@ RUN rm -f /etc/motd \
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD pgrep sshd > /dev/null || exit 1
 
-# Expose port 22
-EXPOSE 22
+# Expose port 22 for SSH and common web development ports
+EXPOSE 22 3000 3001 8080
 
 # Start SSH server
 CMD ["/usr/local/bin/ssh-user-config.sh"]
