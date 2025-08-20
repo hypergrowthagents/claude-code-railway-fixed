@@ -11,13 +11,19 @@ RUN apt-get update \
         curl wget git unzip build-essential \
         postgresql-client redis-tools \
         ca-certificates gnupg lsb-release \
+        python3 python3-pip python3-venv \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && mkdir -p /run/sshd \
     && chmod 755 /run/sshd \
     && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
     # Disable root login
-    && echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+    && echo "PermitRootLogin no" >> /etc/ssh/sshd_config \
+    # SSH security hardening
+    && echo "MaxAuthTries 3" >> /etc/ssh/sshd_config \
+    && echo "ClientAliveInterval 300" >> /etc/ssh/sshd_config \
+    && echo "ClientAliveCountMax 2" >> /etc/ssh/sshd_config \
+    && echo "Protocol 2" >> /etc/ssh/sshd_config
 
 # Install Node.js 18.x
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
@@ -58,6 +64,10 @@ RUN rm -f /etc/motd \
     && rm -f /etc/update-motd.d/* \
     && touch /etc/motd \
     && chmod 644 /etc/motd
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD pgrep sshd > /dev/null || exit 1
 
 # Expose port 22
 EXPOSE 22

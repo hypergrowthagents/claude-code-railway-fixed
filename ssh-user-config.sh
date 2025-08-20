@@ -16,6 +16,21 @@ fi
 # Set authorized keys if applicable
 : ${AUTHORIZED_KEYS:=""}
 
+# Set timezone if provided
+: ${TZ:=""}
+if [ -n "$TZ" ]; then
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    echo "Timezone set to: $TZ"
+fi
+
+# Set SSH banner if provided
+: ${SSH_BANNER:=""}
+if [ -n "$SSH_BANNER" ]; then
+    echo "$SSH_BANNER" > /etc/ssh/banner
+    echo "Banner /etc/ssh/banner" >> /etc/ssh/sshd_config
+    echo "SSH banner configured"
+fi
+
 # Check if SSH_USERNAME or SSH_PASSWORD is empty and raise an error
 if [ -z "$SSH_USERNAME" ] || [ -z "$SSH_PASSWORD" ]; then
     echo "Error: SSH_USERNAME and SSH_PASSWORD must be set." >&2
@@ -57,11 +72,16 @@ fi
 
 # Create development directory
 echo "Setting up development workspace..."
-mkdir -p "/home/$USERNAME/dev"
-chown "$USERNAME:$USERNAME" "/home/$USERNAME/dev"
+mkdir -p "/home/$SSH_USERNAME/dev"
+chown "$SSH_USERNAME:$SSH_USERNAME" "/home/$SSH_USERNAME/dev"
 
 echo "Development environment setup completed"
 
+# Configure logging
+: ${LOG_LEVEL:="INFO"}
+echo "LogLevel $LOG_LEVEL" >> /etc/ssh/sshd_config
+echo "SyslogFacility AUTH" >> /etc/ssh/sshd_config
+
 # Start the SSH server
-echo "Starting SSH server..."
+echo "Starting SSH server with log level: $LOG_LEVEL"
 exec /usr/sbin/sshd -D

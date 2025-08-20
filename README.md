@@ -11,10 +11,12 @@ A Docker image designed for Railway deployment that provides an Ubuntu 22.04 bas
 - Root login disabled by default for security
 - Created user has sudo permissions
 - Network utilities included (ping, telnet, iproute2)
-- **Development Environment**: Claude Code, Node.js 18+, Ruby 3.2, Rails
+- **Development Environment**: Claude Code, Node.js 18+, Ruby 3.2, Rails, Python 3
 - **CLI Tools**: GitHub CLI, Railway CLI, PostgreSQL client, Redis tools
-- **Package Managers**: npm, pnpm, yarn, bundler
+- **Package Managers**: npm, pnpm, yarn, bundler, pip
 - **Automated setup**: Git configuration, CLI authentication, repository cloning
+- **Docker Compose**: Local testing support with docker-compose.yml
+- **Health Monitoring**: Built-in health checks for Railway deployment
 
 ## ⚠️ Important Notice
 
@@ -65,6 +67,9 @@ If you need persistent storage, consider using Railway's volume mounts or extern
    - `GH_TOKEN` - GitHub Personal Access Token for GitHub CLI authentication
    - `GITHUB_EMAIL` - Your git commit email address
    - `GITHUB_NAME` - Your git commit name
+   - `TZ` - Timezone (e.g., America/New_York, Europe/London)
+   - `SSH_BANNER` - Custom welcome message displayed after SSH login
+   - `LOG_LEVEL` - SSH logging level (DEBUG, INFO, NOTICE, WARN, ERROR)
 
 5. Redeploy your project to apply the new environment variables:
 
@@ -116,6 +121,7 @@ This container comes pre-configured with a complete development environment incl
 ### Installed Tools
 - **Claude Code**: AI-powered development assistant
 - **Node.js 18+**: JavaScript runtime with npm, pnpm, and yarn
+- **Python 3**: Python runtime with pip and venv
 - **Ruby**: System Ruby with Rails and bundler pre-installed
 - **GitHub CLI**: Authenticated and ready to use (if `GH_TOKEN` provided)
 - **Railway CLI**: Available (requires manual login: `railway login`)
@@ -154,10 +160,47 @@ gh repo clone owner/repo
 ruby --version
 rails --version
 
+# Python is ready
+python3 --version
+pip --version
+
 # Node.js tools are ready
 node --version
 npm --version
 pnpm --version
+```
+
+## Local Development
+
+### Docker Compose Setup
+
+For local testing, use the included `docker-compose.yml`:
+
+```bash
+# Build and start the container
+docker-compose up --build
+
+# Connect via SSH (in another terminal)
+ssh testuser@localhost -p 2222
+
+# Stop the container
+docker-compose down
+```
+
+The Docker Compose setup includes:
+- Pre-configured test user credentials
+- Port mapping (2222:22)
+- Environment variables for development
+- Health checks
+- Optional volume mounting for persistent development
+
+### Environment File
+
+Copy `.env.example` to `.env` and customize your settings:
+
+```bash
+cp .env.example .env
+# Edit .env with your preferred settings
 ```
 
 ## Configuration Details
@@ -196,10 +239,15 @@ to:
 
 - **CRITICAL:** Always change the default SSH credentials in `ssh-user-config.sh` before deploying to production
 - Root login is disabled by default
+- SSH security hardening included: 
+  - Max 3 authentication attempts
+  - Client timeout protection (5 minutes idle)
+  - Protocol 2 enforcement
 - Only password authentication is enabled by default
 - The default user has sudo privileges for administrative tasks
 - Consider using SSH keys (`AUTHORIZED_KEYS`) instead of passwords for better security
 - When using `AUTHORIZED_KEYS`, password authentication is automatically disabled
+- Configurable logging levels for security monitoring
 
 ## Container Limitations
 

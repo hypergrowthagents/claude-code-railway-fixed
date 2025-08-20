@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  railway-ssh:
+    build: .
+    ports:
+      - "2222:22"
+    environment:
+      - SSH_USERNAME=testuser
+      - SSH_PASSWORD=testpass
+      - GITHUB_EMAIL=your@email.com
+      - GITHUB_NAME=Your Name
+      - TZ=America/New_York
+      - SSH_BANNER=Welcome to your local Railway development environment!
+      # - GH_TOKEN=your_github_token_here
+      # - AUTHORIZED_KEYS=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ... user@example.com
+    volumes:
+      # Optional: Mount local directory for persistent development
+      # - ./dev:/home/testuser/dev
+    healthcheck:
+      test: ["CMD", "pgrep", "sshd"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
