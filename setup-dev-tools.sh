@@ -45,6 +45,10 @@ if [ -n "$GH_TOKEN" ]; then
     echo "Authenticating GitHub CLI..."
     run_as_user "echo '$GH_TOKEN' | gh auth login --with-token"
     run_as_user "gh auth status"
+    
+    # Clone all user's repos to ~/dev
+    echo "Cloning all GitHub repositories..."
+    run_as_user "cd $USER_HOME/dev && gh repo list --limit 1000 --json nameWithOwner -q '.[].nameWithOwner' | xargs -I {} gh repo clone {} -- --quiet"
 fi
 
 # Railway CLI is installed system-wide
@@ -58,5 +62,9 @@ run_as_user "npm install -g pnpm yarn create-next-app @expo/cli"
 
 # Create a development directory
 run_as_user "mkdir -p $USER_HOME/dev"
+
+# Set ~/dev as the default directory when logging in via SSH
+echo "cd ~/dev" >> "$USER_HOME/.bashrc"
+echo "cd ~/dev" >> "$USER_HOME/.profile"
 
 echo "Development tools setup completed for $USERNAME"

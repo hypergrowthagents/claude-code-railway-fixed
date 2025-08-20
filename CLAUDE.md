@@ -32,7 +32,8 @@ This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04
 5. Installs Claude Code globally for SSH user
 6. Configures git identity and CLI tools (GitHub CLI auth, Railway CLI install)
 7. Creates ~/dev workspace directory
-8. Starts SSH daemon
+8. Clones all user's GitHub repositories to ~/dev (if GH_TOKEN provided)
+9. Starts SSH daemon
 
 ## Environment Variables
 
