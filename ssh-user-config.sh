@@ -16,6 +16,13 @@ fi
 # Set authorized keys if applicable
 : ${AUTHORIZED_KEYS:=""}
 
+# Set Railway environment variables for automatic binding
+: ${HOST:="0.0.0.0"}
+: ${HOSTNAME:="0.0.0.0"}
+export HOST
+export HOSTNAME
+echo "Railway binding variables set: HOST=$HOST, HOSTNAME=$HOSTNAME"
+
 # Set timezone if provided
 : ${TZ:=""}
 if [ -n "$TZ" ]; then

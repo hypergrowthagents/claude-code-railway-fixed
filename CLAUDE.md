@@ -48,6 +48,8 @@ Development Environment (Optional):
 - `GH_TOKEN`: GitHub Personal Access Token for GitHub CLI authentication
 - `GITHUB_EMAIL`: Git commit email address
 - `GITHUB_NAME`: Git commit name
+- `HOST`: Host binding address for Railway applications (defaults to 0.0.0.0)
+- `HOSTNAME`: Hostname binding for Railway applications (defaults to 0.0.0.0)
 
 ## Deployment Commands
 

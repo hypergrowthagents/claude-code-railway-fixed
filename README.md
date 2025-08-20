@@ -70,6 +70,8 @@ If you need persistent storage, consider using Railway's volume mounts or extern
    - `TZ` - Timezone (e.g., America/New_York, Europe/London)
    - `SSH_BANNER` - Custom welcome message displayed after SSH login
    - `LOG_LEVEL` - SSH logging level (DEBUG, INFO, NOTICE, WARN, ERROR)
+   - `HOST` - Host binding address for Railway applications (defaults to 0.0.0.0)
+   - `HOSTNAME` - Hostname binding for Railway applications (defaults to 0.0.0.0)
 
 5. Redeploy your project to apply the new environment variables:
 
