@@ -20,12 +20,15 @@ echo "Configuring npm for user installations..."
 run_as_user "mkdir -p $USER_HOME/.npm-global"
 run_as_user "npm config set prefix '$USER_HOME/.npm-global'"
 
-# Add npm global binaries to PATH
-echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.bashrc"
-echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.profile"
+# Add npm global binaries and rbenv to PATH
+echo 'export PATH="/opt/rbenv/bin:/opt/rbenv/shims:$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.bashrc"
+echo 'export PATH="/opt/rbenv/bin:/opt/rbenv/shims:$HOME/.npm-global/bin:$PATH"' >> "$USER_HOME/.profile"
+echo 'eval "$(/opt/rbenv/bin/rbenv init -)"' >> "$USER_HOME/.bashrc"
+echo 'eval "$(/opt/rbenv/bin/rbenv init -)"' >> "$USER_HOME/.profile"
 
-# Ruby is already installed system-wide, no rbenv setup needed
-export PATH="$USER_HOME/.npm-global/bin:$PATH"
+# Ruby is installed via rbenv, ensure it's in PATH
+export PATH="/opt/rbenv/bin:/opt/rbenv/shims:$USER_HOME/.npm-global/bin:$PATH"
+eval "$(/opt/rbenv/bin/rbenv init -)"
 
 # Install Claude Code globally as user (command: claude)
 echo "Installing Claude Code..."
@@ -61,7 +64,7 @@ fi
 # Railway CLI is installed system-wide
 # Note: Manual login required after SSH connection: 'railway login'
 
-# Rails is already installed system-wide during Docker build
+# Rails is installed via rbenv during Docker build
 
 # Install common Node.js packages
 echo "Installing common Node.js packages..."

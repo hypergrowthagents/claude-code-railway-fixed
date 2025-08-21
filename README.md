@@ -1,17 +1,17 @@
 # Railway Docker Ubuntu SSH Server
 
-A Docker image designed for Railway deployment that provides an Ubuntu 22.04 base with SSH server enabled (SSHD). This allows you to connect to your Railway container via SSH for remote access and management.
+A Docker image designed for Railway deployment that provides an Ubuntu 24.04 LTS base with SSH server enabled (SSHD). This allows you to connect to your Railway container via SSH for remote access and management.
 
 ## Features
 
-- Ubuntu 22.04 base image
+- Ubuntu 24.04 LTS base image
 - SSH server (OpenSSH) pre-configured
 - **Clean SSH Login**: No welcome messages for direct command line access
 - Password authentication enabled
 - Root login disabled by default for security
 - Created user has sudo permissions
 - Network utilities included (ping, telnet, iproute2)
-- **Development Environment**: Claude Code, Node.js 18+, Ruby 3.2, Rails, Python 3
+- **Development Environment**: Claude Code, Node.js 20.x LTS, Ruby 3.3.6, Rails, Python 3.12
 - **CLI Tools**: GitHub CLI, Railway CLI, PostgreSQL client, Redis tools
 - **Package Managers**: npm, pnpm, yarn, bundler, pip
 - **Automated setup**: Git configuration, CLI authentication, repository cloning
@@ -122,9 +122,9 @@ This container comes pre-configured with a complete development environment incl
 
 ### Installed Tools
 - **Claude Code**: AI-powered development assistant
-- **Node.js 18+**: JavaScript runtime with npm, pnpm, and yarn
-- **Python 3**: Python runtime with pip and venv
-- **Ruby**: System Ruby with Rails and bundler pre-installed
+- **Node.js 20.x LTS**: JavaScript runtime with npm, pnpm, and yarn
+- **Python 3.12**: Python runtime with pip and venv
+- **Ruby 3.3.6**: Latest stable Ruby via rbenv with Rails and bundler pre-installed
 - **GitHub CLI**: Authenticated and ready to use (if `GH_TOKEN` provided)
 - **Railway CLI**: Available (requires manual login: `railway login`)
 - **Database Clients**: PostgreSQL and Redis clients

@@ -1,7 +1,7 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
-# Starting Ubuntu 24.04 official docker image has user ubuntu with UID/GID 1000
-# Remove the default ubuntu user to free up UID/GID 1000
+# Ubuntu 24.04 has a default ubuntu user with UID/GID 1000
+# Remove it to free up UID/GID 1000 for our custom user
 RUN userdel -r ubuntu 2>/dev/null || true
 
 # Install system dependencies and SSH server
@@ -25,21 +25,29 @@ RUN apt-get update \
     && echo "ClientAliveCountMax 2" >> /etc/ssh/sshd_config \
     && echo "Protocol 2" >> /etc/ssh/sshd_config
 
-# Install Node.js 18.x
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+# Install Node.js 20.x LTS (latest LTS version)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-# Install ripgrep (required for Claude Code)
-RUN curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.deb \
-    && dpkg -i ripgrep_14.1.0-1_amd64.deb \
-    && rm ripgrep_14.1.0-1_amd64.deb
+# Install ripgrep (required for Claude Code) - latest stable version
+RUN curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep_14.1.1-1_amd64.deb \
+    && dpkg -i ripgrep_14.1.1-1_amd64.deb \
+    && rm ripgrep_14.1.1-1_amd64.deb
 
-# Install Ruby via system package manager (simpler and more reliable)
+# Install Ruby 3.3.x (latest stable) via rbenv for better version management
 RUN apt-get update \
-    && apt-get install -y ruby-full ruby-dev \
+    && apt-get install -y autoconf bison build-essential libssl-dev libyaml-dev \
+        libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm-dev \
+    && git clone https://github.com/rbenv/rbenv.git /opt/rbenv \
+    && git clone https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build \
+    && /opt/rbenv/bin/rbenv install 3.3.6 \
+    && /opt/rbenv/bin/rbenv global 3.3.6 \
+    && echo 'export PATH="/opt/rbenv/bin:/opt/rbenv/shims:$PATH"' >> /etc/profile.d/rbenv.sh \
+    && echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh \
+    && chmod +x /etc/profile.d/rbenv.sh \
+    && /opt/rbenv/shims/gem install rails bundler \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && gem install rails bundler
+    && rm -rf /var/lib/apt/lists/*
 
 # Install GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -50,8 +58,8 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Railway CLI
-RUN npm install -g @railway/cli
+# Install Railway CLI (set PATH for rbenv first)
+RUN export PATH="/opt/rbenv/bin:/opt/rbenv/shims:$PATH" && npm install -g @railway/cli
 
 # Copy ssh user config to configure user's password and authorized keys
 COPY ssh-user-config.sh /usr/local/bin/

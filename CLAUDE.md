@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04 base with SSH server enabled for Railway deployment. It creates a containerized SSH environment accessible via Railway's TCP proxy, pre-configured as a complete development environment with Claude Code, Node.js, Ruby, and essential development tools.
+This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 24.04 LTS base with SSH server enabled for Railway deployment. It creates a containerized SSH environment accessible via Railway's TCP proxy, pre-configured as a complete development environment with Claude Code, Node.js, Ruby, and essential development tools.
 
 ## Architecture
 
-- **Dockerfile**: Defines Ubuntu 22.04 base image with SSH server, Node.js 18+, Ruby, development tools
+- **Dockerfile**: Defines Ubuntu 24.04 LTS base image with SSH server, Node.js 20.x LTS, Ruby 3.3.6, development tools
 - **ssh-user-config.sh**: Configuration script that runs on container startup to set up SSH users and authentication
 - **setup-dev-tools.sh**: Configures Claude Code, git identity, CLI authentication, and development environment
 - **assets/**: Screenshots for documentation showing Railway configuration steps
@@ -16,8 +16,9 @@ This is a Railway Docker Ubuntu SSH Server project that provides an Ubuntu 22.04
 ## Key Components
 
 ### Container Setup
-- Ubuntu 22.04 base with OpenSSH server
-- Node.js 18+, Ruby, Rails, PostgreSQL/Redis clients
+- Ubuntu 24.04 LTS base with OpenSSH server
+- Node.js 20.x LTS, Ruby 3.3.6 (via rbenv), Rails, PostgreSQL/Redis clients
+- Python 3.12 (Ubuntu 24.04 default)
 - Claude Code AI development assistant
 - GitHub CLI and Railway CLI pre-installed
 - Root login disabled by default for security
