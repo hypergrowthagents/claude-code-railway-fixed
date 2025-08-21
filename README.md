@@ -64,7 +64,7 @@ If you need persistent storage, consider using Railway's volume mounts or extern
    - `AUTHORIZED_KEYS` - SSH public keys for key-based authentication (optional)
 
    **Development Environment (Optional):**
-   - `GH_TOKEN` - GitHub Personal Access Token for GitHub CLI authentication
+   - `GH_TOKEN` - GitHub Personal Access Token for GitHub CLI authentication and git push/pull
    - `GITHUB_EMAIL` - Your git commit email address
    - `GITHUB_NAME` - Your git commit name
    - `TZ` - Timezone (e.g., America/New_York, Europe/London)
@@ -133,10 +133,11 @@ This container comes pre-configured with a complete development environment incl
 ### Automatic Setup
 When the container starts, it automatically:
 1. Configures git with your identity (if `GITHUB_EMAIL` and `GITHUB_NAME` provided)
-2. Authenticates GitHub CLI (if `GH_TOKEN` provided)
+2. Authenticates GitHub CLI and configures git for push/pull (if `GH_TOKEN` provided)
 3. Installs Railway CLI (manual login required after SSH connection)  
 4. Installs Claude Code globally for the SSH user
 5. Creates a `~/dev/` directory for your projects
+6. Clones all your GitHub repositories to `~/dev/` (if `GH_TOKEN` provided)
 
 ### Clean Login
 SSH login goes directly to command prompt with no welcome messages for a clean development experience.
@@ -147,8 +148,9 @@ After SSH connection:
 # Claude Code is ready to use
 claude
 
-# GitHub CLI is authenticated
+# GitHub CLI is authenticated (git push/pull work automatically)
 gh repo list
+git push  # Works without additional authentication
 
 # Railway CLI (requires manual login in SSH session)
 railway login

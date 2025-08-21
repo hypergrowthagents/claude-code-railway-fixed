@@ -40,11 +40,18 @@ if [ -n "$GITHUB_EMAIL" ] && [ -n "$GITHUB_NAME" ]; then
     run_as_user "git config --global pull.rebase false"
 fi
 
+# Create a development directory first (moved up to ensure it exists before cloning)
+run_as_user "mkdir -p $USER_HOME/dev"
+
 # Authenticate GitHub CLI if token is provided
 if [ -n "$GH_TOKEN" ]; then
     echo "Authenticating GitHub CLI..."
     run_as_user "echo '$GH_TOKEN' | gh auth login --with-token"
     run_as_user "gh auth status"
+    
+    # Setup git to use GitHub CLI for authentication (enables git push/pull)
+    echo "Setting up git authentication with GitHub CLI..."
+    run_as_user "gh auth setup-git"
     
     # Clone all user's repos to ~/dev
     echo "Cloning all GitHub repositories..."
@@ -59,9 +66,6 @@ fi
 # Install common Node.js packages
 echo "Installing common Node.js packages..."
 run_as_user "npm install -g pnpm yarn create-next-app @expo/cli"
-
-# Create a development directory
-run_as_user "mkdir -p $USER_HOME/dev"
 
 # Set ~/dev as the default directory when logging in via SSH
 echo "cd ~/dev" >> "$USER_HOME/.bashrc"
